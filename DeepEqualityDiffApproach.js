@@ -75,11 +75,16 @@ function testObjects() {
     test("Two objects with same key and same array should be equal", true, { a: [[]] }, { a: [[]] });
 }
 
+function testUndefinedNullNaN() {
+    test("Two null should be equal", true, null, null);
+}
+
 function main() {
     testBooleans();
     testNumbers();
     testArrays();
     testObjects();
+    testUndefinedNullNaN();
 }
 
 main(); 
