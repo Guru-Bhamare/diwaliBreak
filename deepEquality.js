@@ -1,6 +1,6 @@
 function isEqual(input1, input2) {
 
-    if (input1 === null || input2 === null) return input1 === null && input2 === null;
+    if (input1 === null || input2 === null) return (input1 === null && input2 === null);
 
     if ((typeof (input1) !== "object")) return input1 === input2;
 
@@ -11,8 +11,8 @@ function isEqual(input1, input2) {
     for (const key in input1) {
         if (!(key in (input2))) return false;
         if (!isEqual(input1[key], input2[key])) return false;
-
     }
+
     return true;
 }
 
