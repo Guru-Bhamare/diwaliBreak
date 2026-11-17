@@ -1,13 +1,37 @@
-function areArraysEqual(input1, input2) {
-    if (input1.length !== input2.length) return false;
-    for (let i = 0; i < input1.length; i++) {
-        if (!isEqual(input1[i], input2[i])) return false;
+function type(a) {
+    if (Array.isArray(a)) return "array";
+    if (typeof (a) === "boolean") return "boolean";
+    if (typeof (a) === "object") return "object";
+    if (typeof (a) === "string") return "string";
+    return 'number'
+}
+
+function areBothDatatypesSame(input1, input2) {
+    return type(input1) !== type(input2);
+}
+
+function areObjectsEqual(obj1, obj2) {
+    if (Object.keys(obj1).length !== Object.keys(obj2).length) return false;
+    for (const key in obj1) {
+        if (!(key in obj2)) return false;
+        if (!isEqual(obj1[key], obj2[key])) return false;
+    }
+    return true;
+}
+
+function areArraysEqual(array1, array2) {
+    if (array1.length !== array2.length) return false;
+    for (let i = 0; i < array1.length; i++) {
+        if (!isEqual(array1[i], array2[i])) return false;
     }
     return true;
 }
 
 function isEqual(input1, input2) {
-    if (Array.isArray(input1) && Array.isArray(input2)) return areArraysEqual(input1, input2);
+
+    if (areBothDatatypesSame(input1, input2)) return false;
+    if (type(input1) === "array") return areArraysEqual(input1, input2);
+    if (type(input1) === "object") return areObjectsEqual(input1, input2);
     return input1 === input2;
 }
 
@@ -43,10 +67,19 @@ function testArrays() {
 
 }
 
+function testObjects() {
+    test("Two empty objects should be equal", true, {}, {});
+    test("Two object with different length of keys should be unequal", false, {}, { a: 1 });
+    test("Two objects with same keys and values should be equal", true, { a: 1 }, { a: 1 })
+    test("Two objects with same keys but different values should be unequal", false, { a: 1 }, { a: 3 });
+    test("Two objects with same key and same array should be equal", true, { a: [[]] }, { a: [[]] });
+}
+
 function main() {
     testBooleans();
     testNumbers();
     testArrays();
+    testObjects();
 }
 
 main(); 
