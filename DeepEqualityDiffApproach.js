@@ -1,12 +1,11 @@
 function type(a) {
+    if (a === null) return "null";
+    if (Number.isNaN(a)) return "NaN";
     if (Array.isArray(a)) return "array";
-    if (typeof (a) === "boolean") return "boolean";
-    if (typeof (a) === "object") return "object";
-    if (typeof (a) === "string") return "string";
-    return 'number'
+    return typeof (a);
 }
 
-function areBothDatatypesSame(input1, input2) {
+function areTypesEqual(input1, input2) {
     return type(input1) !== type(input2);
 }
 
@@ -27,17 +26,31 @@ function areArraysEqual(array1, array2) {
     return true;
 }
 
-function isEqual(input1, input2) {
-
-    if (areBothDatatypesSame(input1, input2)) return false;
-    if (type(input1) === "array") return areArraysEqual(input1, input2);
-    if (type(input1) === "object") return areObjectsEqual(input1, input2);
+function areValuesEqual(input1, input2) {
     return input1 === input2;
 }
 
-function test(message, actual, input1, input2) {
-    const isPassed = isEqual(input1, input2) === actual ? '✅' : '❌';
-    console.log(`${message} | ${isPassed}`);
+function isEqual(input1, input2) {
+
+    if (areTypesEqual(input1, input2)) return false;
+
+    switch (type(input1)) {
+        case "array":
+            return areArraysEqual(input1, input2);
+        case "null":
+            return areValuesEqual(input1, input2);
+        case "object":
+            return areObjectsEqual(input1, input2);
+        case "NaN":
+            return true;
+    }
+    return areValuesEqual(input1, input2);
+}
+
+function test(message, expected, input1, input2) {
+    const actual = isEqual(input1, input2);
+    const isPassed = actual === expected ? '✅' : '❌';
+    console.log(` ${isPassed} | ${message}`);
 }
 
 function testBooleans() {
@@ -77,6 +90,10 @@ function testObjects() {
 
 function testUndefinedNullNaN() {
     test("Two null should be equal", true, null, null);
+    test("One null and One undefined should be unequal", false, undefined, null);
+    test("Two undefined should be equal", true, undefined, undefined);
+    test("Two NaN should be equal", true, NaN, NaN);
+
 }
 
 function main() {
